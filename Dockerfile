@@ -1,11 +1,11 @@
-FROM tiangolo/node-frontend:10 as build-stage
-WORKDIR /app
-COPY package*.json /app/
+FROM node:latest
+
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+
 RUN npm install
-COPY ./ /app/
-RUN npm run build
-# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.15
-COPY --from=build-stage /app/build/ /usr/share/nginx/html
-# Copy the default nginx.conf provided by tiangolo/node-frontend
-COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
+
+CMD [ "npm", "start" ]
